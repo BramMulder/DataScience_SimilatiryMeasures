@@ -35,14 +35,9 @@ namespace SimilatiryMeasures
                         if (!dataDictornary.ContainsKey(Convert.ToInt16(fields[0])))
                         {
                             dataDictornary.Add(Convert.ToInt16(fields[0]), new Dictionary<double, double>());
-                            dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToDouble(fields[1]), Convert.ToDouble(fields[2]));
-                        }
-                        //Else add a new value to the nested dictionary
-                        else
-                        {
-                            dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToDouble(fields[1]), Convert.ToDouble(fields[2]));
                         }
 
+                        dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToDouble(fields[1]), Convert.ToDouble(fields[2]));
 
                     }
                     Console.WriteLine("Done Reading CSV Data");
