@@ -8,7 +8,7 @@ namespace SimilatiryMeasures
         public static double CalculateEculeanDistanceCoefficient (double[] dataX, double[] dataY)
         {
             if (dataX.Length != dataY.Length)
-                throw new Exception("Coordinates lengths differ. Please make sure all point have the same amount of coordinates");
+                throw new Exception("Data Array lengths differ. Please make sure all arrays have the same amount of points");
 
             double distance = 0.0;
 
@@ -28,7 +28,7 @@ namespace SimilatiryMeasures
         public static double CalculateManhattanDistanceCoefficient(double[] dataX, double[] dataY)
         {
             if (dataX.Length != dataY.Length)
-                throw new Exception("Coordinates lengths differ. Please make sure all point have the same amount of coordinates");
+                throw new Exception("Data Array lengths differ. Please make sure all arrays have the same amount of points");
 
             double distance = 0.0;
 
@@ -48,7 +48,7 @@ namespace SimilatiryMeasures
         public static double CalculatePearsonCoefficient(double[] dataX, double[] dataY)
         {
             if (dataX.Length != dataY.Length)
-                throw new Exception("Coordinates lengths differ. Please make sure all point have the same amount of coordinates");
+                throw new Exception("Data Array lengths differ. Please make sure all arrays have the same amount of points");
 
             // n
             var n = dataX.Length;
@@ -62,12 +62,12 @@ namespace SimilatiryMeasures
 
             // ∑ x(i)²
             var xSquareSum = 0.0;            
-            //∑ (x(i))²
+            // ∑ (x(i))²
             var xSumSquared = Math.Pow(xSum , 2);            
             
             // ∑ y(i)²
             var ySquareSum = 0.0;            
-            //∑ (y(i))²
+            // ∑ (y(i))²
             var ySumSquared = Math.Pow(ySum, 2);
 
 
@@ -96,6 +96,9 @@ namespace SimilatiryMeasures
 
         public static double CalculateCosineSimilarityCoefficient(double[] dataX, double[] dataY)
         {
+            if (dataX.Length != dataY.Length)
+                throw new Exception("Data Array lengths differ. Please make sure all arrays have the same amount of points");
+
             // ∑ ( x(i) * y(i) )
             var xySum = 0.0;
 

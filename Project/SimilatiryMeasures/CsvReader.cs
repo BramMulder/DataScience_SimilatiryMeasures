@@ -17,7 +17,7 @@ namespace SimilatiryMeasures
                 {
                     string[] fields;
 
-                    var dataDictornary = new Dictionary<int, Dictionary<double, double>>();
+                    var dataDictornary = new  Dictionary<int, Dictionary<int, double>>();
 
                     while (true)
                     {
@@ -34,10 +34,9 @@ namespace SimilatiryMeasures
                         //If the key does not exist yet in the dictionary, add a new empty nested dictionary and then a value into the new nested dictionary
                         if (!dataDictornary.ContainsKey(Convert.ToInt16(fields[0])))
                         {
-                            dataDictornary.Add(Convert.ToInt16(fields[0]), new Dictionary<double, double>());
+                            dataDictornary.Add(Convert.ToInt16(fields[0]), new Dictionary<int, double>());
                         }
-
-                        dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToDouble(fields[1]), Convert.ToDouble(fields[2]));
+                        dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToInt32(fields[1]), Convert.ToDouble(fields[2]));
 
                     }
                     Console.WriteLine("Done Reading CSV Data");
