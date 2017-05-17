@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SimilatiryMeasures
 {
@@ -6,6 +8,8 @@ namespace SimilatiryMeasures
     {
         static void Main(string[] args)
         {
+            //TODO adapt CSV reader / KNearestNeighbours to accept 0 values for non rated items, to be able to run CosineSimilarity 
+
             var dictionary = CsvReader.ReadConnections();
 
             var dataX = new[] {5.0, 1.0, 3.0};
@@ -26,6 +30,19 @@ namespace SimilatiryMeasures
 
             var cosSim = SimilarityCalculations.CalculateCosineSimilarityCoefficient(dataCosX, dataCosY);
             Console.WriteLine(cosSim);
+
+            var individualId = 186;
+            var amountOfNeighbours = 8;
+            var initialThreshhold = 0.35;
+
+            //Run KNearestNeighbours
+            var kNearestNeighbours = new KNearestNeighbours();
+            var result = kNearestNeighbours.GetNearestNeighbours(individualId, dictionary[individualId], dictionary, amountOfNeighbours, initialThreshhold);
+
+            foreach (var item in result)
+            {
+                Console.WriteLine("Id: {0}, Similarity: {1}", item.Key, item.Similarity );
+            }
         }
     }
 }
