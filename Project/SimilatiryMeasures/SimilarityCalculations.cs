@@ -99,38 +99,45 @@ namespace SimilatiryMeasures
             if (dataX.Length != dataY.Length)
                 throw new Exception("Data Array lengths differ. Please make sure all arrays have the same amount of points");
 
+            // n
+            var n = dataX.Length;
+
+            // ∑ x
+            var xSum = 0.0;
+            // ∑ y     
+            var ySum = 0.0;
             // ∑ ( x(i) * y(i) )
             var xySum = 0.0;
 
-            // ||x||
-            var dotProductX = 0.0;            
-            
-            // ||y||
-            var dotProductY = 0.0;
+            // ∑ x(i)²
+            var xSquareSum = 0.0;
 
-            // ∑ ( x(i) * y(i) )
+            // ∑ y(i)²
+            var ySquareSum = 0.0;
+
             for (int i = 0; i < dataX.Length; i++)
             {
-                xySum = xySum + (dataX[i] * dataY[i]);
+                // ∑ x
+                xSum += dataX[i];
+                // ∑ y
+                ySum += dataY[i];
+
+                // ∑ ( x(i) * y(i) )
+                xySum += (dataX[i] * dataY[i]);
+                // ∑ x(i)²
+                xSquareSum += Math.Pow(dataX[i], 2);
+                // ∑ y(i)²
+                ySquareSum += Math.Pow(dataY[i], 2);
             }
 
-            // Calculate ||x||
-            foreach (var point in dataX)
-            {
-                dotProductX = dotProductX + Math.Pow(point, 2);
-            }
-            dotProductX = Math.Sqrt(dotProductX);
+            //∑ (x(i))²
+            var xSumSquared = Math.Pow(xSum, 2);
+            //∑ (y(i))²
+            var ySumSquared = Math.Pow(ySum, 2);
 
-            // Calculate ||y||
-            foreach (var point in dataY)
-            {
-                dotProductY = dotProductY + Math.Pow(point, 2);
-            }
-            dotProductY = Math.Sqrt(dotProductY);
+            double r = (xySum - ((xSum * ySum) / n)) / (Math.Sqrt(xSquareSum - (xSumSquared / n)) * Math.Sqrt(ySquareSum - (ySumSquared / n)));
 
-            var similarityCoefficient = xySum / (dotProductX * dotProductY);
-
-            return similarityCoefficient;
+            return r;
         }
     }
 }
