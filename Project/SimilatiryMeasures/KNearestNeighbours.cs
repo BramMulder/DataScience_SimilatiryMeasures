@@ -11,8 +11,9 @@ namespace SimilatiryMeasures
         private double _threshhold;
         private Dictionary<int, double> _similairtyValues;
 
+
         //TODO improve speed by replacing excessive code 
-        public KeyValueObject[] GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, double initialThreshold)
+        private void GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, int initialThreshold)
         {
             //Initialize
             _neighbourRatingsList = new Dictionary<int, Dictionary<int, double>>(neighbourRankingsListLength);
@@ -37,23 +38,29 @@ namespace SimilatiryMeasures
                 {
                     ProcessNeighbour(neighbour.Key, neighbour.Value, similarity);
                 }
+
             }
 
+<<<<<<< HEAD
             return (from i in _similairtyValues
                     join n in _neighbourRatingsList
                     on i.Key equals n.Key
                     select new KeyValueObject { Key = i.Key, Similarity = i.Value }).ToArray();
+=======
+
+>>>>>>> c1b94f066d7d278a5875cc1cc040b810b74dc6b2
         }
 
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
-            var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));
 
-            return similarRatedItems.Count() > 1;
+
+            return true;
         }
 
         private double CalculateSimilarity(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
+<<<<<<< HEAD
             var cosDistance = SimilarityCalculations.RunCosineSimilarity(individual, neighbour);
 
             var ratingsIndividual = (from i in individual
@@ -68,12 +75,20 @@ namespace SimilatiryMeasures
             var eDistance = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
 
             return eDistance;
+=======
+            var ratingsIndividual = individual.Values.Select(i => i).ToArray();
+            var ratingsNeighbour = neighbour.Values.Select(i => i).ToArray();
+            var result = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
+
+
+            return result;
+>>>>>>> c1b94f066d7d278a5875cc1cc040b810b74dc6b2
         }
 
         private void ProcessNeighbour(int neighbourId, Dictionary<int, double> neighbour, double similarity)
         {
             //If the neightbourRatingList isn't 'full' yet, add the neighbour
-            if (_neighbourRatingsList.Count < _maxRatingListLength)
+            if (_neighbourRatingsList.Count < _threshhold)
             {
                 _neighbourRatingsList.Add(neighbourId, neighbour);
 
@@ -92,11 +107,5 @@ namespace SimilatiryMeasures
                 }
             }
         }
-    }
-
-    public class KeyValueObject
-    {
-        public int Key { get; set; }
-        public double Similarity { get; set; }
     }
 }

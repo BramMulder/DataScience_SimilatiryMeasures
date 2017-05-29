@@ -6,9 +6,12 @@ namespace SimilatiryMeasures
     {
         static void Main(string[] args)
         {
+<<<<<<< HEAD
             //TODO adapt CSV reader / KNearestNeighbours to accept 0 values for non rated items, to be able to run CosineSimilarity 
             //TODO write item rating prediction
 
+=======
+>>>>>>> c1b94f066d7d278a5875cc1cc040b810b74dc6b2
             var dictionary = CsvReader.ReadConnections();
 
             var dataX = new[] {5.0, 1.0, 3.0};
@@ -29,19 +32,6 @@ namespace SimilatiryMeasures
 
             var cosSim = SimilarityCalculations.CalculateCosineSimilarityCoefficient(dataCosX, dataCosY);
             Console.WriteLine(cosSim);
-
-            var individualId = 186;
-            var amountOfNeighbours = 8;
-            var initialThreshhold = 0.35;
-
-            //Run KNearestNeighbours
-            var kNearestNeighbours = new KNearestNeighbours();
-            var result = kNearestNeighbours.GetNearestNeighbours(individualId, dictionary[individualId], dictionary, amountOfNeighbours, initialThreshhold);
-
-            foreach (var item in result)
-            {
-                Console.WriteLine("Id: {0}, Similarity: {1}", item.Key, item.Similarity );
-            }
         }
     }
 }
