@@ -6,12 +6,9 @@ namespace SimilatiryMeasures
     {
         static void Main(string[] args)
         {
-<<<<<<< HEAD
             //TODO adapt CSV reader / KNearestNeighbours to accept 0 values for non rated items, to be able to run CosineSimilarity 
             //TODO write item rating prediction
 
-=======
->>>>>>> c1b94f066d7d278a5875cc1cc040b810b74dc6b2
             var dictionary = CsvReader.ReadConnections();
 
             var dataX = new[] {5.0, 1.0, 3.0};
