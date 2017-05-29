@@ -9,11 +9,11 @@ namespace SimilatiryMeasures
     {
         private static readonly char[] Delimiters = { ',', ';' };
 
-        public static Dictionary<int, Dictionary<int, double>> ReadConnections()
+        public static IDictionary ReadConnections()
         {
             try
             {
-                using (StreamReader reader = new StreamReader(@"ratings.csv"))
+                using (StreamReader reader = new StreamReader(@"data.csv"))
                 {
                     string[] fields;
 

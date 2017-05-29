@@ -12,8 +12,9 @@ namespace SimilatiryMeasures
         private Dictionary<int, double> _similairtyValues;
         private double _lowestSimilarity;
 
+
         //TODO improve speed by replacing excessive code 
-        public KeyValueObject[] GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, double initialThreshold)
+        private void GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, int initialThreshold)
         {
             //Initialize
             _neighbourRatingsList = new Dictionary<int, Dictionary<int, double>>(neighbourRankingsListLength);
@@ -38,42 +39,33 @@ namespace SimilatiryMeasures
                 {
                     ProcessNeighbour(neighbour.Key, neighbour.Value, similarity);
                 }
+
             }
 
-            return (from i in _similairtyValues
-                    join n in _neighbourRatingsList
-                    on i.Key equals n.Key
-                    select new KeyValueObject {Key = i.Key, Similarity = i.Value}).ToArray();
+
         }
 
-        //TODO rewrite comparisment to match floating points
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
-            var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));
 
-            return similarRatedItems.Count() > 1;
+
+            return true;
         }
 
         private double CalculateSimilarity(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
-            var ratingsIndividual = (from i in individual
-                      join n in neighbour
-                      on i.Key equals n.Key
-                      select Convert.ToDouble(i.Value)).ToArray();
-            var ratingsNeighbour = (from i in individual
-                      join n in neighbour
-                      on i.Key equals n.Key
-                      select Convert.ToDouble(n.Value)).ToArray();
+            var ratingsIndividual = individual.Values.Select(i => i).ToArray();
+            var ratingsNeighbour = neighbour.Values.Select(i => i).ToArray();
+            var result = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
 
-            var eDistance = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
 
-            return eDistance;
+            return result;
         }
 
         private void ProcessNeighbour(int neighbourId, Dictionary<int, double> neighbour, double similarity)
         {
             //If the neightbourRatingList isn't 'full' yet, add the neighbour
-            if (_neighbourRatingsList.Count < _maxRatingListLength)
+            if (_neighbourRatingsList.Count < _threshhold)
             {
                 _neighbourRatingsList.Add(neighbourId, neighbour);
 
@@ -92,11 +84,5 @@ namespace SimilatiryMeasures
                 }
             }
         }
-    }
-
-    public class KeyValueObject
-    {
-        public int Key { get; set; }
-        public double Similarity { get; set; }
     }
 }
