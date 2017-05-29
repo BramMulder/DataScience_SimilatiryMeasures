@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SimilatiryMeasures
 {
@@ -9,6 +7,7 @@ namespace SimilatiryMeasures
         static void Main(string[] args)
         {
             //TODO adapt CSV reader / KNearestNeighbours to accept 0 values for non rated items, to be able to run CosineSimilarity 
+            //TODO write item rating prediction
 
             var dictionary = CsvReader.ReadConnections();
 

@@ -61,6 +61,7 @@
     <Compile Include="CalculateEculeanDistanceCoefficientUnitTest.cs" />
     <Compile Include="CalculateManhattanDistanceCoefficientUnitTest.cs" />
     <Compile Include="CalculatePearsonCoefficientUnitTest.cs" />
+    <Compile Include="CalculateCosineSimilarityCoefficientUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

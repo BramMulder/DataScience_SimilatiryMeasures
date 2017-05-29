@@ -10,7 +10,6 @@ namespace SimilatiryMeasures
         private int _maxRatingListLength;
         private double _threshhold;
         private Dictionary<int, double> _similairtyValues;
-        private double _lowestSimilarity;
 
         //TODO improve speed by replacing excessive code 
         public KeyValueObject[] GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, double initialThreshold)
@@ -33,7 +32,7 @@ namespace SimilatiryMeasures
                 var similarity = CalculateSimilarity(individual, neighbour.Value);
                 //Add the similarity value to a dictornary for later usage (Neighbour key, similarity)
                 _similairtyValues.Add(neighbour.Key, similarity);
-                //If the similairty is larger or equal to the threshhold  and  the individual has the rated the same items 
+                //If the similairty is larger or equal to the threshhold and the individual has the rated the same items 
                 if (similarity >= _threshhold && HasRatedAdditionalItems(individual, neighbour.Value))
                 {
                     ProcessNeighbour(neighbour.Key, neighbour.Value, similarity);
@@ -43,10 +42,9 @@ namespace SimilatiryMeasures
             return (from i in _similairtyValues
                     join n in _neighbourRatingsList
                     on i.Key equals n.Key
-                    select new KeyValueObject {Key = i.Key, Similarity = i.Value}).ToArray();
+                    select new KeyValueObject { Key = i.Key, Similarity = i.Value }).ToArray();
         }
 
-        //TODO rewrite comparisment to match floating points
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
             var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));
@@ -56,14 +54,16 @@ namespace SimilatiryMeasures
 
         private double CalculateSimilarity(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
+            var cosDistance = SimilarityCalculations.RunCosineSimilarity(individual, neighbour);
+
             var ratingsIndividual = (from i in individual
-                      join n in neighbour
-                      on i.Key equals n.Key
-                      select Convert.ToDouble(i.Value)).ToArray();
+                                     join n in neighbour
+                                     on i.Key equals n.Key
+                                     select Convert.ToDouble(i.Value)).ToArray();
             var ratingsNeighbour = (from i in individual
-                      join n in neighbour
-                      on i.Key equals n.Key
-                      select Convert.ToDouble(n.Value)).ToArray();
+                                    join n in neighbour
+                                    on i.Key equals n.Key
+                                    select Convert.ToDouble(n.Value)).ToArray();
 
             var eDistance = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
 
