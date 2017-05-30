@@ -33,7 +33,7 @@ namespace SimilatiryMeasuresUnitTests
         }
 
         [Test]
-        public void Then_Result_Succeeded_Should_Be_Minus_One()
+        public void Then_Result_Succeeded_Should_Be_Zero_Point_Four()
         {
             // Assert
             _result.ShouldBe(_expected);

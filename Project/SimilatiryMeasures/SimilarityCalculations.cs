@@ -107,25 +107,20 @@ namespace SimilatiryMeasures
             // ||y||
             var dotProductY = 0.0;
 
-            // ∑ ( x(i) * y(i) )
             for (int i = 0; i < dataX.Length; i++)
             {
-                xySum = xySum + (dataX[i] * dataY[i]);
+                // ∑ ( x(i) * y(i) )
+                xySum += (dataX[i] * dataY[i]);
+                // Calculate ||x||
+                dotProductX += Math.Pow(dataX[i], 2);
+                // Calculate ||y||
+                dotProductY += Math.Pow(dataY[i], 2);
             }
 
-            // Calculate ||x||
-            foreach (var point in dataX)
-            {
-                dotProductX = dotProductX + Math.Pow(point, 2);
-            }
             dotProductX = Math.Sqrt(dotProductX);
 
-            // Calculate ||y||
-            foreach (var point in dataY)
-            {
-                dotProductY = dotProductY + Math.Pow(point, 2);
-            }
             dotProductY = Math.Sqrt(dotProductY);
+            
 
             var similarityCoefficient = xySum / (dotProductX * dotProductY);
 
