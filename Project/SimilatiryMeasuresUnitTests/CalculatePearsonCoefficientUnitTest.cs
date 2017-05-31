@@ -4,7 +4,6 @@ using Shouldly;
 
 namespace SimilatiryMeasuresUnitTests
 {
-    //TODO add NSubstitute to check for method calls
     [TestFixture]
     public class CalculatePearsonCoefficientUnitTest
     {

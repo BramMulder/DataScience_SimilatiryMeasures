@@ -1,14 +1,14 @@
 ﻿using System;
+using SimilatiryMeasures.ItemItem;
+using SimilatiryMeasures.UserItem;
 
-namespace SimilatiryMeasures.UserItem
+namespace SimilatiryMeasures
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //TODO adapt CSV reader / KNearestNeighbours to accept 0 values for non rated items, to be able to run CosineSimilarity 
-            //TODO write item rating prediction
-
+            //TODO update item-rating calculation and similarRatings
             var dictionary = CsvReader.ReadConnections();
 
             var dataX = new[] {5.0, 1.0, 3.0};
@@ -32,10 +32,12 @@ namespace SimilatiryMeasures.UserItem
                 Console.WriteLine("Id: {0}  Similarity: {1}" ,item.Key, item.Similarity);
             }
 
-            PredictedRatingCalculations predictedRatingCalculations = new PredictedRatingCalculations();
-            var predRating = predictedRatingCalculations.CalculatePredictedRating(101, nearestNeigbours, dictionary);
+            //PredictedRatingCalculations predictedRatingCalculations = new PredictedRatingCalculations();
+            //var predRating = predictedRatingCalculations.CalculatePredictedRating(101, nearestNeigbours, dictionary);
+            //Console.WriteLine("Predicted Rating: {0}" , predRating);
 
-            Console.WriteLine("Predicted Rating: {0}" , predRating);
+            CalculateSlope calculateSlope = new CalculateSlope();
+            calculateSlope.ProcessData(dictionary, 101, 102);
         }
     }
 }
