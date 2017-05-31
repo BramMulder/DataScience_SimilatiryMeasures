@@ -17,7 +17,7 @@ namespace SimilatiryMeasures
             for (int i = 0; i < dataX.Length; i++)
             {
                 double delta = dataX[i] - dataY[i];
-                distance = distance + Math.Pow(delta, 2);
+                distance += Math.Pow(delta, 2);
             }
 
             //Calculate coefficient
@@ -118,9 +118,7 @@ namespace SimilatiryMeasures
             }
 
             dotProductX = Math.Sqrt(dotProductX);
-
             dotProductY = Math.Sqrt(dotProductY);
-            
 
             var similarityCoefficient = xySum / (dotProductX * dotProductY);
 

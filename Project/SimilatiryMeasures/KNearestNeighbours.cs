@@ -11,7 +11,7 @@ namespace SimilatiryMeasures
         private double _threshhold;
         private Dictionary<int, double> _similairtyValues;
 
-        //TODO improve speed by replacing excessive code 
+        //TODO improve speed by refactoring code 
         public KeyValueObject[] GetNearestNeighbours(int individualId, Dictionary<int, double> individual, Dictionary<int, Dictionary<int, double>> neighbours, int neighbourRankingsListLength, double initialThreshold)
         {
             //Initialize
@@ -45,6 +45,7 @@ namespace SimilatiryMeasures
                     select new KeyValueObject { Key = i.Key, Similarity = i.Value }).ToArray();
         }
 
+        //TODO change to check if neighbours has one item the user hasn't rated???!!!!
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
             var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));
@@ -54,8 +55,9 @@ namespace SimilatiryMeasures
 
         private double CalculateSimilarity(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
-            var cosDistance = SimilarityCalculations.RunCosineSimilarity(individual, neighbour);
+            //var cosDistance = SimilarityCalculations.RunCosineSimilarity(individual, neighbour);
 
+            //Select the items that both users have rated
             var ratingsIndividual = (from i in individual
                                      join n in neighbour
                                      on i.Key equals n.Key

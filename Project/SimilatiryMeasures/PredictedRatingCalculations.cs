@@ -1,0 +1,7 @@
+﻿namespace SimilatiryMeasures
+{
+    class PredictedRatingCalculations
+    {
+
+    }
+}

@@ -9,7 +9,7 @@ namespace SimilatiryMeasures
     {
         private static readonly char[] Delimiters = { ',', ';' };
 
-        public static IDictionary ReadConnections()
+        public static Dictionary<int, Dictionary<int, double>> ReadConnections()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SimilatiryMeasures
                         {
                             dataDictornary.Add(Convert.ToInt16(fields[0]), new Dictionary<int, double>());
                         }
-                        dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToInt32(fields[1]), Convert.ToDouble(fields[2]));
+                        dataDictornary[Convert.ToInt16(fields[0])].Add(Convert.ToInt32(fields[1]), double.Parse(fields[2].Replace('.', ',')));
 
                     }
                     Console.WriteLine("Done Reading CSV Data");
