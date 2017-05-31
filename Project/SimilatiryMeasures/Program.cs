@@ -78,6 +78,13 @@ namespace SimilatiryMeasures
                 var kIndex = m;
                 while (kIndex < orderedKeysets.Length)
                 {
+                    if (kIndex == m)
+                    {
+                        deviationsMatrix[m, kIndex] = 0;
+                        kIndex++;
+                        continue;
+                    }
+
                     var deviation = calculateSlope.ProcessData(dictionary, orderedKeysets[m], orderedKeysets[kIndex]);
                     deviationsMatrix[m, kIndex] = deviation;
                     //Invert calculated deviation (positive to negative and vise versa)
