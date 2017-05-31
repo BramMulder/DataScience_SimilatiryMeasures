@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SimilatiryMeasures
+namespace SimilatiryMeasures.UserItem
 {
     public class CsvReader
     {

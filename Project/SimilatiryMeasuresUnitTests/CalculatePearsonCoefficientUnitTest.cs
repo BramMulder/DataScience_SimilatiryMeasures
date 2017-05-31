@@ -29,7 +29,7 @@ namespace SimilatiryMeasuresUnitTests
         private void Act()
         {
             // Act
-            var result = SimilatiryMeasures.SimilarityCalculations.CalculatePearsonCoefficient(_dataX, _dataY);
+            var result = SimilatiryMeasures.UserItem.SimilarityCalculations.CalculatePearsonCoefficient(_dataX, _dataY);
             _result = Math.Round(result, 5);
         }
 

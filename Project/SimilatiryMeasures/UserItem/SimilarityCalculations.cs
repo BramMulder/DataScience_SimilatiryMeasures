@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimilatiryMeasures
+namespace SimilatiryMeasures.UserItem
 {
     public static class SimilarityCalculations
     {

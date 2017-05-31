@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimilatiryMeasures
+namespace SimilatiryMeasures.UserItem
 {
     public class KNearestNeighbours
     {
@@ -45,7 +45,7 @@ namespace SimilatiryMeasures
                     select new KeyValueObject { Key = i.Key, Similarity = i.Value }).ToArray();
         }
 
-        //TODO change to check if neighbours has one item the user hasn't rated???!!!!
+        //TODO change to check if neighbours has one item that the target user hasn't rated???!!!!
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
             var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));

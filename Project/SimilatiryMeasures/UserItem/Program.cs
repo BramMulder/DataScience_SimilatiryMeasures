@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimilatiryMeasures
+namespace SimilatiryMeasures.UserItem
 {
     class Program
     {
@@ -25,12 +25,17 @@ namespace SimilatiryMeasures
             var cosSim = SimilarityCalculations.CalculateCosineSimilarityCoefficient(dataCosX, dataCosY);
 
             KNearestNeighbours kNearestNeighbours = new KNearestNeighbours();
-            var result = kNearestNeighbours.GetNearestNeighbours(7, dictionary[7], dictionary, 3, 0.35);
+            var nearestNeigbours = kNearestNeighbours.GetNearestNeighbours(7, dictionary[7], dictionary, 3, 0.35);
 
-            foreach (var item in result)
+            foreach (var item in nearestNeigbours)
             {
                 Console.WriteLine("Id: {0}  Similarity: {1}" ,item.Key, item.Similarity);
             }
+
+            PredictedRatingCalculations predictedRatingCalculations = new PredictedRatingCalculations();
+            var predRating = predictedRatingCalculations.CalculatePredictedRating(101, nearestNeigbours, dictionary);
+
+            Console.WriteLine("Predicted Rating: {0}" , predRating);
         }
     }
 }

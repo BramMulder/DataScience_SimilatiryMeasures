@@ -28,7 +28,7 @@ namespace SimilatiryMeasuresUnitTests
         private void Act()
         {
             // Act
-            var result = SimilatiryMeasures.SimilarityCalculations.CalculateCosineSimilarityCoefficient(_dataX, _dataY);
+            var result = SimilatiryMeasures.UserItem.SimilarityCalculations.CalculateCosineSimilarityCoefficient(_dataX, _dataY);
             _result = Math.Round(result, 5);
         }
 
