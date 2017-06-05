@@ -14,11 +14,79 @@ namespace SimilatiryMeasures
             //TODO update item-rating calculation and similarRatings
             var dictionary = CsvReader.ReadConnections();
 
-            //RunUserItemMethods(dictionary);
-            RunItemItemMethods(dictionary);
+            RunUserItemMethods(dictionary);
+            //RunItemItemMethods(dictionary);
         }
 
         private static void RunUserItemMethods(Dictionary<int, Dictionary<int, double>> dictionary)
+        {
+            //TODO figure out why this input doesn't return 2,63284325835078 as predicted rating
+            var userId = 4;
+            var itemId = 101;
+
+            KNearestNeighbours kNearestNeighbours = new KNearestNeighbours();
+            var nearestNeigbours = kNearestNeighbours.GetNearestNeighbours(userId, dictionary[userId], dictionary, 3, 0.35);
+
+            foreach (var item in nearestNeigbours)
+            {
+                Console.WriteLine("Id: {0}  Similarity: {1}", item.Key, item.Similarity);
+            }
+
+            PredictedRatingCalculations predictedRatingCalculations = new PredictedRatingCalculations();
+            var predRating = predictedRatingCalculations.CalculatePredictedRating(itemId, nearestNeigbours, dictionary);
+            Console.WriteLine("Predicted Rating: {0}" , predRating);
+        }
+
+        private static void RunItemItemMethods(Dictionary<int, Dictionary<int, double>> dictionary)
+        {
+            CalculateSlope calculateSlope = new CalculateSlope();
+
+            //Select all Item Ids per User
+            var movieIds = dictionary.Values.Select(x => x.Keys).ToArray();
+            var uniqueItemIds = new List<int>();
+
+            //Create a list of unique Item Ids
+            for (int j = 0; j < movieIds.Length; j++)
+            {
+                var id = movieIds[j].ToArray();
+                for (int i = 0; i < id.Length; i++)
+                {
+                    if (!uniqueItemIds.Contains(id[i]))
+                    {
+                        uniqueItemIds.Add(id[i]);
+                    }
+                }
+            }
+            var orderedIds = uniqueItemIds.OrderBy(x => x).ToArray();
+
+            //Instantiate a 2D array which will contain a matrix of all ratings
+            var deviationsMatrix = new double[orderedIds.Length, orderedIds.Length];
+
+            //Loop through all 
+            for (int m = 0; m < orderedIds.Length; m++)
+            {
+                var kIndex = m;
+                while (kIndex < orderedIds.Length)
+                {
+                    //If comparing the item to itself, set the deviation to zero
+                    if (kIndex == m)
+                    {
+                        deviationsMatrix[m, kIndex] = 0;
+                        kIndex++;
+                        continue;
+                    }
+                    //Calculate the deviation for the selected Ids
+                    var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[kIndex]);
+                    deviationsMatrix[m, kIndex] = deviation;
+                    //Invert calculated deviation (positive to negative and vise versa)
+                    deviationsMatrix[kIndex, m] = deviation * -1;
+
+                    kIndex++;
+                }
+            }
+        }
+
+        private static void RunCalculationTestMethods()
         {
             var dataX = new[] { 5.0, 1.0, 3.0 };
             var dataY = new[] { 2.0, 4.0, 3.0 };
@@ -32,79 +100,6 @@ namespace SimilatiryMeasures
             var dataCosY = new[] { 2.0, 5.0, 4.0, 3.0, 0.0 };
 
             var cosSim = SimilarityCalculations.CalculateCosineSimilarityCoefficient(dataCosX, dataCosY);
-
-            KNearestNeighbours kNearestNeighbours = new KNearestNeighbours();
-            var nearestNeigbours = kNearestNeighbours.GetNearestNeighbours(7, dictionary[7], dictionary, 3, 0.35);
-
-            foreach (var item in nearestNeigbours)
-            {
-                Console.WriteLine("Id: {0}  Similarity: {1}", item.Key, item.Similarity);
-            }
-
-            //PredictedRatingCalculations predictedRatingCalculations = new PredictedRatingCalculations();
-            //var predRating = predictedRatingCalculations.CalculatePredictedRating(101, nearestNeigbours, dictionary);
-            //Console.WriteLine("Predicted Rating: {0}" , predRating);
-        }
-
-        //TODO skip m == k
-        //TODO 
-        private static void RunItemItemMethods(Dictionary<int, Dictionary<int, double>> dictionary)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-
-            CalculateSlope calculateSlope = new CalculateSlope();
-
-            var movieIds = dictionary.Values.Select(x => x.Keys).ToArray();
-            var keysets = new List<int>();
-
-            for (int j = 0; j < movieIds.Length; j++)
-            {
-                var id = movieIds[j].ToArray();
-                for (int i = 0; i < id.Length; i++)
-                {
-                    if (!keysets.Contains(id[i]))
-                    {
-                        keysets.Add(id[i]);
-                    }
-                }
-            }
-            var orderedKeysets = keysets.OrderBy(x => x).ToArray();
-
-            var deviationsMatrix = new double[orderedKeysets.Length, orderedKeysets.Length];
-
-            for (int m = 0; m < orderedKeysets.Length; m++)
-            {
-                var kIndex = m;
-                while (kIndex < orderedKeysets.Length)
-                {
-                    if (kIndex == m)
-                    {
-                        deviationsMatrix[m, kIndex] = 0;
-                        kIndex++;
-                        continue;
-                    }
-
-                    var deviation = calculateSlope.ProcessData(dictionary, orderedKeysets[m], orderedKeysets[kIndex]);
-                    deviationsMatrix[m, kIndex] = deviation;
-                    //Invert calculated deviation (positive to negative and vise versa)
-                    deviationsMatrix[kIndex, m] = deviation * -1;
-
-                    kIndex++;
-                }
-            }
-
-
-            stopWatch.Stop();
-            // Get the elapsed time as a TimeSpan value.
-            TimeSpan ts = stopWatch.Elapsed;
-
-            // Format and display the TimeSpan value.
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
-            Console.WriteLine("RunTime " + elapsedTime);
-
         }
     }
 }

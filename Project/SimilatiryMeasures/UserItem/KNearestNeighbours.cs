@@ -45,10 +45,9 @@ namespace SimilatiryMeasures.UserItem
                     select new KeyValueObject { Key = i.Key, Similarity = i.Value }).ToArray();
         }
 
-        //TODO change to check if neighbours has one item that the target user hasn't rated???!!!!
         private bool HasRatedAdditionalItems(Dictionary<int, double> individual, Dictionary<int, double> neighbour)
         {
-            var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z == x));
+            var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z != x));
 
             return similarRatedItems.Count() > 1;
         }
@@ -67,7 +66,8 @@ namespace SimilatiryMeasures.UserItem
                                     on i.Key equals n.Key
                                     select Convert.ToDouble(n.Value)).ToArray();
 
-            var eDistance = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
+            //var eDistance = SimilarityCalculations.CalculateEculeanDistanceCoefficient(ratingsIndividual, ratingsNeighbour);
+            var eDistance = SimilarityCalculations.CalculatePearsonCoefficient(ratingsIndividual, ratingsNeighbour);
 
             return eDistance;
         }
@@ -83,14 +83,17 @@ namespace SimilatiryMeasures.UserItem
             //If the list is 'full'
             else if (_neighbourRatingsList.Count == _maxRatingListLength)
             {
+                //Find the key of the neighbour with the least similarity in the nearest neighbour list
+                var lastKey = _similairtyValues.OrderByDescending(x => x.Value).Last(x => _neighbourRatingsList.ContainsKey(x.Key)).Key;
                 //Check if this neighbour has a better similatrity than the values in the list
-                if (_similairtyValues.Last().Value < similarity)
+                if (_similairtyValues[lastKey] < similarity)
                 {
                     //Remove the item with the lowest similarity from the Dictionary
-                    _neighbourRatingsList.Remove(_similairtyValues.Last().Key);
+                    _neighbourRatingsList.Remove(lastKey);
                     //Add new individual with a better similarity
                     _neighbourRatingsList.Add(neighbourId, neighbour);
-                    _threshhold = Convert.ToDouble(similarity);
+                    //Update the threshhold by taking the similarity value of the last neighbour in the nearest neighbour list
+                    _threshhold = _similairtyValues.OrderByDescending(x => x.Value).Last(x => _neighbourRatingsList.ContainsKey(x.Key)).Value;
                 }
             }
         }
