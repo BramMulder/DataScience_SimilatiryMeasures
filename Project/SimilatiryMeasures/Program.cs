@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using SimilatiryMeasures.ItemItem;
 using SimilatiryMeasures.UserItem;
@@ -14,8 +13,8 @@ namespace SimilatiryMeasures
             //TODO update item-rating calculation and similarRatings
             var dictionary = CsvReader.ReadConnections();
 
-            RunUserItemMethods(dictionary);
-            //RunItemItemMethods(dictionary);
+            //RunUserItemMethods(dictionary);
+            RunItemItemMethods(dictionary);
         }
 
         private static void RunUserItemMethods(Dictionary<int, Dictionary<int, double>> dictionary)
@@ -61,27 +60,44 @@ namespace SimilatiryMeasures
 
             //Instantiate a 2D array which will contain a matrix of all ratings
             var deviationsMatrix = new double[orderedIds.Length, orderedIds.Length];
-
+            //TODO add place for amount of users have rated item the deviation is calculated for
             //Loop through all 
+            //for (int m = 0; m < orderedIds.Length; m++)
+            //{
+            //    var kIndex = m;
+            //    while (kIndex < orderedIds.Length)
+            //    {
+            //        //If comparing the item to itself, set the deviation to zero
+            //        if (kIndex == m)
+            //        {
+            //            deviationsMatrix[m, kIndex] = 0;
+            //            kIndex++;
+            //            continue;
+            //        }
+            //        //Calculate the deviation for the selected Ids
+            //        var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[kIndex]);
+            //        deviationsMatrix[m, kIndex] = deviation;
+            //        //Invert calculated deviation (positive to negative and vise versa)
+            //        deviationsMatrix[kIndex, m] = deviation * -1;
+
+            //        kIndex++;
+            //    }
+            //}
             for (int m = 0; m < orderedIds.Length; m++)
             {
-                var kIndex = m;
-                while (kIndex < orderedIds.Length)
+                for (int p = m; p < orderedIds.Length; p++)
                 {
                     //If comparing the item to itself, set the deviation to zero
-                    if (kIndex == m)
+                    if (p == m)
                     {
-                        deviationsMatrix[m, kIndex] = 0;
-                        kIndex++;
+                        deviationsMatrix[m, p] = 0;
                         continue;
                     }
                     //Calculate the deviation for the selected Ids
-                    var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[kIndex]);
-                    deviationsMatrix[m, kIndex] = deviation;
+                    var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[p]);
+                    deviationsMatrix[m, p] = deviation;
                     //Invert calculated deviation (positive to negative and vise versa)
-                    deviationsMatrix[kIndex, m] = deviation * -1;
-
-                    kIndex++;
+                    deviationsMatrix[p, m] = deviation * -1;
                 }
             }
         }
