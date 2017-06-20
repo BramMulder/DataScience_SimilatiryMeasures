@@ -47,6 +47,7 @@
     <Compile Include="ItemItem\CalculatePredictedRating.cs" />
     <Compile Include="ItemItem\CalculateSlope.cs" />
     <Compile Include="ItemItem\DeviationObject.cs" />
+    <Compile Include="ItemItem\ItemItemLogic.cs" />
     <Compile Include="UserItem\CsvReader.cs" />
     <Compile Include="UserItem\KNearestNeighbours.cs" />
     <Compile Include="UserItem\PredictedRatingCalculations.cs" />
