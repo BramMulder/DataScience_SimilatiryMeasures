@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using SimilatiryMeasures.ExtensionMethods;
 using SimilatiryMeasures.ItemItem;
 using SimilatiryMeasures.UserItem;
 
@@ -20,11 +22,11 @@ namespace SimilatiryMeasures
         private static void RunUserItemMethods(Dictionary<int, Dictionary<int, double>> dictionary)
         {
             //TODO figure out why this input doesn't return 2,63284325835078 as predicted rating
-            var userId = 4;
-            var itemId = 101;
+            var userId = 186;
+            var itemId = 778;
 
             KNearestNeighbours kNearestNeighbours = new KNearestNeighbours();
-            var nearestNeigbours = kNearestNeighbours.GetNearestNeighbours(userId, dictionary[userId], dictionary, 3, 0.35);
+            var nearestNeigbours = kNearestNeighbours.GetNearestNeighbours(userId, dictionary[userId], dictionary, 8, 0.35);
 
             foreach (var item in nearestNeigbours)
             {
@@ -56,50 +58,46 @@ namespace SimilatiryMeasures
                     }
                 }
             }
-            var orderedIds = uniqueItemIds.OrderBy(x => x).ToArray();
+            var uniqueItemsOrdered = uniqueItemIds.OrderBy(x => x).ToArray();
 
             //Instantiate a 2D array which will contain a matrix of all ratings
-            var deviationsMatrix = new double[orderedIds.Length, orderedIds.Length];
-            //TODO add place for amount of users have rated item the deviation is calculated for
-            //Loop through all 
-            //for (int m = 0; m < orderedIds.Length; m++)
-            //{
-            //    var kIndex = m;
-            //    while (kIndex < orderedIds.Length)
-            //    {
-            //        //If comparing the item to itself, set the deviation to zero
-            //        if (kIndex == m)
-            //        {
-            //            deviationsMatrix[m, kIndex] = 0;
-            //            kIndex++;
-            //            continue;
-            //        }
-            //        //Calculate the deviation for the selected Ids
-            //        var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[kIndex]);
-            //        deviationsMatrix[m, kIndex] = deviation;
-            //        //Invert calculated deviation (positive to negative and vise versa)
-            //        deviationsMatrix[kIndex, m] = deviation * -1;
+            var deviationsMatrix = new DeviationObject[uniqueItemsOrdered.Length, uniqueItemsOrdered.Length];
+            //var ratingsAmountMatrix = new double[uniqueItemsOrdered.Length, uniqueItemsOrdered.Length];
 
-            //        kIndex++;
-            //    }
-            //}
-            for (int m = 0; m < orderedIds.Length; m++)
+            for (int m = 0; m < uniqueItemsOrdered.Length; m++)
             {
-                for (int p = m; p < orderedIds.Length; p++)
+                for (int p = m; p < uniqueItemsOrdered.Length; p++)
                 {
                     //If comparing the item to itself, set the deviation to zero
                     if (p == m)
                     {
-                        deviationsMatrix[m, p] = 0;
+                        deviationsMatrix[m, p] = new DeviationObject
+                        {
+                            Id1 = uniqueItemsOrdered[m],
+                            Id2 = uniqueItemsOrdered[p]
+                        };
                         continue;
                     }
                     //Calculate the deviation for the selected Ids
-                    var deviation = calculateSlope.ProcessData(dictionary, orderedIds[m], orderedIds[p]);
-                    deviationsMatrix[m, p] = deviation;
+                    var deviationResult = calculateSlope.ProcessData(dictionary, uniqueItemsOrdered[m], uniqueItemsOrdered[p]);
+                    //Insert deviation
+                    deviationsMatrix[m, p] = deviationResult;
                     //Invert calculated deviation (positive to negative and vise versa)
-                    deviationsMatrix[p, m] = deviation * -1;
+                    var mirroredDeviationResult = new DeviationObject
+                    {
+                        Id1 = deviationResult.Id2,
+                        Id2 = deviationResult.Id1,
+                        AmountOfRatings = deviationResult.AmountOfRatings,
+                        Deviation = deviationResult.Deviation * -1
+                    };
+                    deviationsMatrix[p, m] = mirroredDeviationResult;
                 }
             }
+
+            //TODO figure out how to toss in the correct values
+            var deviationsRow = deviationsMatrix.GetColumnWithObjects(0);
+            var predictedRating = CalculatePredictedRating.PredictRating(dictionary, deviationsRow, 7);
+            Console.WriteLine("Rating for user {0} is: {1}", 107, predictedRating);
         }
 
         private static void RunCalculationTestMethods()
