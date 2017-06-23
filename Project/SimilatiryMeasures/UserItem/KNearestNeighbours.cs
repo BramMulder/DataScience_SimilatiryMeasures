@@ -49,7 +49,7 @@ namespace SimilatiryMeasures.UserItem
         {
             var similarRatedItems = individual.Keys.Where(x => neighbour.Keys.Any(z => z != x));
 
-            return similarRatedItems.Count() > 1;
+            return similarRatedItems.Count() > 2;
         }
 
         private double CalculateSimilarity(Dictionary<int, double> individual, Dictionary<int, double> neighbour)

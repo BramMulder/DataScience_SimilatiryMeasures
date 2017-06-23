@@ -12,7 +12,7 @@ namespace SimilatiryMeasures.UserItem
         {
             try
             {
-                using (StreamReader reader = new StreamReader(@"data.csv"))
+                using (StreamReader reader = new StreamReader(@"dataSetQuick.csv"))
                 {
                     string[] fields;
 

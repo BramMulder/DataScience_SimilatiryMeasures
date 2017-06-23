@@ -6,7 +6,6 @@ namespace SimilatiryMeasures.UserItem
 {
     public class PredictedRatingCalculations
     {
-        //TODO handle error when a nearest neighbour hasn't rated the item
         public double CalculatePredictedRating(int itemId, KeyValueObject[] nearestNeighbours, Dictionary<int, Dictionary<int, double>> ratings)
         {
             //If not all Nearest Neighbours have rated the item, throw an exception

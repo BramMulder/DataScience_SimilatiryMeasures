@@ -19,11 +19,32 @@ namespace SimilatiryMeasures.ItemItem
             var indexDictionary = GenerateIndexDictionary(uniqueIdsOrdered);
 
             //Retrieve all deviations in a column for the given item Id
-            var deviationsRow = deviationsMatrix.GetColumnWithObjects(indexDictionary[targetItemId]);
+            //var deviationsRow = deviationsMatrix.GetColumnWithObjects(indexDictionary[targetItemId]);
 
-            //Predict the rating for the given user and item
-            var predictedRating = CalculatePredictedRating.PredictRating(dictionary, deviationsRow, targetUserId);
-            Console.WriteLine("Rating for user {0} is: {1}", targetUserId, predictedRating);
+            ////Predict the rating for the given user and item
+            //var predictedRating = CalculatePredictedRating.PredictRating(dictionary, deviationsRow, targetUserId);
+            //Console.WriteLine("Rating for user {0} is: {1}", targetUserId, predictedRating);
+
+            var bestRatings = new List<double>();
+            for (int i = 0; i < uniqueIdsOrdered.Length; i++)
+            {
+                var deviationsRow = deviationsMatrix.GetColumnWithObjects(indexDictionary[uniqueIdsOrdered[i]]);
+                var predictedRating = CalculatePredictedRating.PredictRating(dictionary, deviationsRow, targetUserId);
+                if (bestRatings.Count < 5 || bestRatings.Last() < predictedRating)
+                {
+                    if (bestRatings.Count == 5)
+                    {
+                        bestRatings.Remove(bestRatings.Last());
+                    }
+                    bestRatings.Add(predictedRating);
+                    bestRatings = bestRatings.OrderByDescending(x => x).ToList();
+                }
+            }
+
+            foreach (var element in bestRatings)
+            {
+                Console.WriteLine(element);
+            }
         }
 
         private static int[] GetAllUniqueIds(Dictionary<int, double>.KeyCollection[] movieIds)
@@ -94,6 +115,12 @@ namespace SimilatiryMeasures.ItemItem
                 idDictionary.Add(uniqueIdsOrdered[i], i);
             }
             return idDictionary;
+        }
+
+        //TODO complete this method
+        private void AddNewRating()
+        {
+            
         }
     }
 }
